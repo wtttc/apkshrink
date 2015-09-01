@@ -7,5 +7,6 @@
         ".jpeg"
     ],
     "compress_ignore_pattern": [
+        ".9"
     ]
 }

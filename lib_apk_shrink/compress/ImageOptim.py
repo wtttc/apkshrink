@@ -1,5 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
+from lib_apk_shrink.utils import shrink_utils
+
 __author__ = 'tiantong'
 import os
 
@@ -13,13 +15,13 @@ class ImageOptim(BaseCompressTool):
     def __init__(self, command):
         self.command = command
 
-    def compress(self, file_string):
+    def compress(self, floder_string):
         assert isinstance(super(ImageOptim, self).compress, object)
-        super(ImageOptim, self).compress(file_string)
-        command = self.command + " " + file_string
-        old_size = os.path.getsize(file_string);
+        super(ImageOptim, self).compress(floder_string)
+        command = self.command + " " + floder_string
+        old_size = shrink_utils.get_path_size(floder_string);
         os.popen(command).read()
-        new_size = os.path.getsize(file_string);
+        new_size = shrink_utils.get_path_size(floder_string);
         chg_size = long(old_size) - long(new_size)
         if chg_size > 0:
             return chg_size;
