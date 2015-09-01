@@ -23,7 +23,4 @@ class ImageOptim(BaseCompressTool):
         os.popen(command).read()
         new_size = shrink_utils.get_path_size(floder_string);
         chg_size = long(old_size) - long(new_size)
-        if chg_size > 0:
-            return chg_size;
-        else:
-            return None
+        return chg_size;
