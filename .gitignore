@@ -64,3 +64,11 @@ apkshrink/out/
 libwebp/
 test_pics/
 .idea/
+
+# output
+AlphaCheck.txt
+PngCompress.txt
+PngCompress2.txt
+SizeCheck.txt
+UselessLayout.txt
+UselessDrawable.txt
