@@ -60,7 +60,6 @@ def get_size_in_nice_string(sizeInBytes):
         return (bytes[:-2] if bytes.endswith('.0') else bytes) + ' bytes'
 
 
-CHECK_SIZE_FLODER_ROOT = 'weibo_dev_res'
 # 获取从weibo_dev_res到根目录的路径
 def get_folder_name(parent, floder_root):
     # 默认情况显示最后一个文件夹的名字
