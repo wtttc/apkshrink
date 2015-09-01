@@ -1,0 +1,9 @@
+{
+    "check_alpha_dir": [
+    ],
+    "check_alpha_format": [
+        ".png"
+    ],
+    "check_alpha_ignore_list": [],
+    "size_scale": 20480
+}

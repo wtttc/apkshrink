@@ -1,0 +1,11 @@
+{
+    "check_size_dir": [
+    ],
+    "check_size_ignore_list": [
+    ],
+    "size_scale_normal": 51200,
+    "size_scale_1": 102400,
+    "file_type_1": [
+        ".zip"
+    ]
+}

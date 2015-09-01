@@ -1,0 +1,11 @@
+{
+    "compress_dir": [
+    ],
+    "compress_format": [
+        ".png",
+        ".jpg",
+        ".jpeg"
+    ],
+    "compress_ignore_pattern": [
+    ]
+}
