@@ -63,3 +63,4 @@ apkshrink/decompile/
 apkshrink/out/
 libwebp/
 test_pics/
+.idea/
