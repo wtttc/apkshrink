@@ -73,7 +73,7 @@ def get_folder_name(parent, floder_root):
     if folder_name[1] == floder_root:
         return folder_name[1]
     else:
-        return get_folder_name(folder_name[0]) + os.sep + folder_name[1]
+        return get_folder_name(folder_name[0], floder_root) + os.sep + folder_name[1]
 
 
 # 打印方法使用时间
