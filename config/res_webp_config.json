@@ -1,0 +1,10 @@
+{
+    "command": "../cwebp",
+    "command_opt": " -q 100 -lossless ",
+    "compress_dir": [
+    ],
+    "compress_ignore_pattern": [
+        ".9."
+    ],
+    "out_suffix": ".webp"
+}
