@@ -54,7 +54,7 @@ class UselessLayout(object):
 
         xml_dirs = self.useless_layout_config.xml_dir
         for dir in xml_dirs:
-            self.find_dict_in_rootpath(dir, self.layout_dict)
+            self.find_dict_in_rootpath(dir, self.layout_dict, True, True)
         print ""
         print "after search xml dirs:"
         print self.layout_dict
@@ -62,7 +62,7 @@ class UselessLayout(object):
     # 查找指定dict 在指定 文件夹下的匹配次数
     # rootpath：要查找的文件夹路径
     # set： 要查找的文件名set
-    def find_dict_in_rootpath(self, rootpath, dict, is_xml=False):
+    def find_dict_in_rootpath(self, rootpath, dict, is_xml=False, extra=False):
         for parent, dirnames, filenames in os.walk(rootpath):  # 三个参数：分别返回1.父目录 2.所有文件夹名字（不含路径） 3.所有文件名字
             for filename in filenames:  # 输出文件信息
                 if "svn-base" in filename:
@@ -79,7 +79,10 @@ class UselessLayout(object):
                     if is_xml:
                         # 检查layout xml的方式主要寻找 include viewStub的方式
                         # 引号也要查找，避免碰到前缀一样的 如:"main"&"main_layout"
-                        search_string = '"@layout/' + search_string + '"'
+                        if extra:
+                            search_string = '@layout/' + search_string
+                        else:
+                            search_string = '"@layout/' + search_string + '"'
                         # print("filename:" + filename + " search_string:" + search_string)
                         count = file_content.count(search_string)
                         # print("count:" + str(count))
