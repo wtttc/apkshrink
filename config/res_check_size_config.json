@@ -1,10 +1,11 @@
 {
     "check_size_dir": [
+        ".../res"
     ],
     "check_size_ignore_list": [
     ],
-    "size_scale_normal": 51200,
-    "size_scale_1": 102400,
+    "size_scale_normal": 20000,
+    "size_scale_1": 51200,
     "file_type_1": [
         ".zip"
     ]

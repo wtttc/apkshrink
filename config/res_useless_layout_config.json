@@ -1,8 +1,11 @@
 {
     "src_dir": [
+        ".../src"
     ],
     "layout_dir": [
+        ".../layout"
     ],
     "xml_dir": [
+        ".../res/xml"
     ]
 }

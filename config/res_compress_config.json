@@ -1,5 +1,6 @@
 {
     "compress_dir": [
+        ".../res"
     ],
     "compress_format": [
         ".png",

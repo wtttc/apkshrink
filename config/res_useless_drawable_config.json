@@ -1,8 +1,12 @@
 {
     "src_dir": [
+        ".../src"
     ],
     "res_dir": [
+        ".../res"
     ],
     "extra_xml": [
+        ".../AndroidManifest.xml",
+        ".../values/style.xml"
     ]
 }
