@@ -33,7 +33,7 @@ class UselessDrawable(object):
                     for parent, dirnames, filenames in os.walk(path_dir):
                         for filename in filenames:
                             file_type = filename.split(".")[-1]
-                            raw_name = filename.split(".")[0]
+                            raw_name = filename.split(".")[0].encode("utf-8")
                             # print "filetype:" + file_type + " raw_name:" + raw_name
                             if file_type in res_file_type:
                                 self.drawable_dict[raw_name] = 0
@@ -67,7 +67,7 @@ class UselessDrawable(object):
         extra_xml = self.useless_drawable_config.extra_xml
         for extra_one in extra_xml:
             # print(extra_one)
-            self.find_dict_in_xml_file(extra_one, self.drawable_dict)
+            self.find_dict_in_xml_file(extra_one, self.drawable_dict, True)
         print ""
         print "after search extra_xml:"
         print self.drawable_dict
@@ -78,6 +78,9 @@ class UselessDrawable(object):
     def find_dict_in_rootpath(self, rootpath, dict):
         for parent, dirnames, filenames in os.walk(rootpath):  # 三个参数：分别返回1.父目录 2.所有文件夹名字（不含路径） 3.所有文件名字
             for filename in filenames:  # 输出文件信息
+                if "svn-base" in filename:
+                    # 过滤svn文件
+                    continue
                 file_path = os.path.join(parent, filename)  # 输出文件路径信息
                 file_object = open(file_path)
                 file_content = file_object.read()  # 获得当前文件的内容
@@ -88,8 +91,10 @@ class UselessDrawable(object):
                     search_string = pic_name
                     # R.layout.xxx 结尾是 空格 ) ;
                     # TODO 注释中的还会搜出来
-                    search_string = 'R.drawable.' + search_string + '[;)\s]'
+                    search_string = 'R.drawable.' + search_string + r'[;|)|,|\s]'
                     sp = re.findall(search_string, file_content)
+                    print("search_string:" + search_string)
+                    print("filename:" + filename)
                     count = len(sp)
                     if count > 0:
                         dict[pic_name] += count  # 更新每个图片的引用次数
@@ -104,7 +109,7 @@ class UselessDrawable(object):
                 file_path = os.path.join(parent, filename)  # 输出文件路径信息
                 self.find_dict_in_xml_file(file_path, dict)
 
-    def find_dict_in_xml_file(self, file_path, dict):
+    def find_dict_in_xml_file(self, file_path, dict, extra=False):
         file_object = open(file_path)
         file_content = file_object.read()  # 获得当前文件的内容
         for pic_name in dict.keys():
@@ -115,7 +120,10 @@ class UselessDrawable(object):
             # 检查layout xml的方式主要寻找 include viewStub的方式
             # 引号也要查找，避免碰到前缀一样的 如:"main"&"main_layout"
             # TODO XML中解析DOM获取已经引用的drawable
-            search_string = '"@drawable/' + search_string + '"'
+            if extra:
+                search_string = '@drawable/' + search_string
+            else:
+                search_string = '"@drawable/' + search_string + '"'
             dict[pic_name] += file_content.count(search_string)  # 更新每个图片的引用次数
         file_object.close();
 

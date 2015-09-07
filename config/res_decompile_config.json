@@ -1,6 +1,7 @@
 {
-    "jad_path": "",
+    "jad_path": ".../jad",
     "output_path": "",
     "extra_jar": [
+        ".../xxx.jar"
     ]
 }

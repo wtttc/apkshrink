@@ -1,5 +1,6 @@
 {
     "check_alpha_dir": [
+        ".../res"
     ],
     "check_alpha_format": [
         ".png"
