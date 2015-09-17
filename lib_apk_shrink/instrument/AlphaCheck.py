@@ -30,6 +30,13 @@ class AlphaCheck(object):
                     # 获取文件的绝对路径
                     path = os.path.join(parent, filename)
 
+                    match_p = False;
+                    for pattern in self.alpah_config.check_size_ignore_pattern:
+                        if pattern in filename:
+                            match_p = True
+                    if match_p:
+                        continue
+
                     # 过滤文件类型
                     if not os.path.splitext(filename)[1] in self.alpah_config.check_alpha_format:
                         continue

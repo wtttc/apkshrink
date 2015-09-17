@@ -29,10 +29,15 @@ class JarDecompile(object):
         if not os.path.exists(self.output_path_out):
             os.makedirs(self.output_path_out)
 
+        # 删除无用的 META-INF
+        META_path = os.path.join(self.output_path_out, 'META-INF')
+
         # 解压jar
         for jar_path in self.decompile_config.extra_jar:
             command = 'unzip ' + jar_path + ' -d ' + self.output_path_out
             result = os.popen(command).read()
+            self.delDir(META_path)
+
 
         # 反编译
         command = jad_path + ' -r -ff -d decompile -s java ' + self.output_path_out + '/**/*.class'

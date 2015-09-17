@@ -6,6 +6,7 @@
 class CheckAlphaConfig(object):
     check_alpha_dir = []
     check_alpha_ignore_list = []
+    check_size_ignore_pattern = []
     check_alpha_format = []
     size_scale = 1000000
 
@@ -16,6 +17,9 @@ class CheckAlphaConfig(object):
         # ignore的对象
         if 'check_alpha_ignore_list' in dict:
             self.check_alpha_ignore_list = dict['check_alpha_ignore_list']
+        # ignore的对象
+        if 'check_size_ignore_pattern' in dict:
+            self.check_size_ignore_pattern = dict['check_size_ignore_pattern']
         # 检查的文件类型
         if 'check_alpha_format' in dict:
             self.check_alpha_format = dict['check_alpha_format']

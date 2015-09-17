@@ -42,6 +42,24 @@ class UselessDrawable(object):
         print "raw:"
         print self.drawable_dict
 
+        res_dir = self.useless_drawable_config.res_dir
+        for dir in res_dir:
+            self.find_dict_in_res(dir, self.drawable_dict)
+        print ""
+        print "after search res_dir:"
+        print self.drawable_dict
+
+        extra_xml = self.useless_drawable_config.extra_xml
+        for extra_one in extra_xml:
+            # print(extra_one)
+            try:
+                self.find_dict_in_xml_file(extra_one, self.drawable_dict, True)
+            except Exception:
+                print("catch exception")
+        print ""
+        print "after search extra_xml:"
+        print self.drawable_dict
+
         # src中搜寻
         src_dirs = self.useless_drawable_config.src_dir
         for dir in src_dirs:
@@ -55,21 +73,6 @@ class UselessDrawable(object):
             self.find_dict_in_rootpath(self.extra_jar_path, self.drawable_dict)
         print ""
         print "after search extra_jar_path:"
-        print self.drawable_dict
-
-        res_dir = self.useless_drawable_config.res_dir
-        for dir in res_dir:
-            self.find_dict_in_res(dir, self.drawable_dict)
-        print ""
-        print "after search res_dir:"
-        print self.drawable_dict
-
-        extra_xml = self.useless_drawable_config.extra_xml
-        for extra_one in extra_xml:
-            # print(extra_one)
-            self.find_dict_in_xml_file(extra_one, self.drawable_dict, True)
-        print ""
-        print "after search extra_xml:"
         print self.drawable_dict
 
     # 查找指定dict 在指定 文件夹下的匹配次数
@@ -132,3 +135,27 @@ class UselessDrawable(object):
             if self.drawable_dict[pic_name] == 0:
                 # print(pic_name)
                 log.info(pic_name)
+
+    def deleteUseless(self):
+        res_dir = self.useless_drawable_config.res_dir
+        for dir in res_dir:
+            for pic_name in self.drawable_dict.keys():
+                if self.drawable_dict[pic_name] == 0:
+                    filename1 = pic_name + '.xml'
+                    filename2 = pic_name + '.9.png'
+                    filename3 = pic_name + '.png'
+                    for p, d, f in os.walk(dir):
+                        for sd in d:
+                            if "drawable" not in sd:
+                                continue
+                            path = os.path.join(p, sd, filename1)
+                            self.remove_file(path)
+                            path = os.path.join(p, sd, filename2)
+                            self.remove_file(path)
+                            path = os.path.join(p, sd, filename3)
+                            self.remove_file(path)
+
+    def remove_file(path):
+        if os.path.exists(path):
+            os.remove(path)
+            print(path + " is removed")

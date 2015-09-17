@@ -31,6 +31,13 @@ class SizeCheck(object):
                     size = os.path.getsize(path)
                     size_scale = self.size_config.size_scale_normal
 
+                    match_p = False;
+                    for pattern in self.size_config.check_size_ignore_pattern:
+                        if pattern in filename:
+                            match_p = True
+                    if match_p:
+                        continue
+
                     if filename in self.size_config.check_size_ignore_list:
                         self.total_ignore_size += size
                         continue

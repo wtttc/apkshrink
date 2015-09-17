@@ -94,7 +94,7 @@ walk_dir(input_folder, do_normal_pic, res_dir)
 # <target name="-crunch" >
 #   <exec executable="python"
 #   taskName="crunch">
-#   <arg value="test.py"/>
+#   <arg value="compress_9_patch.py"/>
 #   <arg value="${project.lib.res}/res"/>
 #   <arg value="${out.dir}" />
 #   <arg value="${android.build.tools.dir}/aapt${exe}" />
