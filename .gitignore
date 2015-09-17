@@ -58,7 +58,7 @@ target/
 
 # custom config
 libs/libwebp-0.4.3
-Imageoptim.app/
+*.app/
 apkshrink/decompile/
 apkshrink/out/
 libwebp/
