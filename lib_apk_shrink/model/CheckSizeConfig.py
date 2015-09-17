@@ -6,6 +6,7 @@
 class CheckSizeConfig(object):
     check_size_dir = []
     check_size_ignore_list = []
+    check_size_ignore_pattern = []
     size_scale_normal = 100000
     size_scale_1 = 100000
     file_type_1 = ""
@@ -17,6 +18,9 @@ class CheckSizeConfig(object):
         # ignore的对象
         if 'check_size_ignore_list' in dict:
             self.check_size_ignore_list = dict['check_size_ignore_list']
+        # ignore模式，如.svn-base文件
+        if 'check_size_ignore_pattern' in dict:
+            self.check_size_ignore_pattern = dict['check_size_ignore_pattern']
         # 普通文件大小的限制 50k
         if 'size_scale_normal' in dict:
             self.size_scale_normal = dict['size_scale_normal']

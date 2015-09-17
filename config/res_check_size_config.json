@@ -4,6 +4,9 @@
     ],
     "check_size_ignore_list": [
     ],
+    "check_size_ignore_pattern": [
+        ".svn-base"
+    ],
     "size_scale_normal": 20000,
     "size_scale_1": 51200,
     "file_type_1": [
