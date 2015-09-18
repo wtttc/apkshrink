@@ -1,11 +1,11 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-__author__ = 'tiantong'
+
 import os
 import sys
 
+__author__ = 'tiantong'
 rootdir = "/Users/easytang/Documents/Git/github/apkshrink"
-
 sys.path.append(rootdir)
 
 from apkshrink import shrink_loader

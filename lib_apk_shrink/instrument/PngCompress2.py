@@ -48,7 +48,7 @@ class PngCompress2(object):
                     if "drawable" in dirname:
                         folder_path = os.path.join(parent, dirname)
                         log.info("")
-                        log.info(folder_path)
+                        log.info("start check floder:" + folder_path)
                         for s_parent, s_dirnames, s_filenames in os.walk(folder_path):
                             self.walk_pic_valid(s_parent, dirname, s_filenames, output_dir)
             # 压缩文件夹下地图片
@@ -62,6 +62,7 @@ class PngCompress2(object):
     def walk_pic_valid(self, parent, dirname, filenames, output_dir):
         for filename in filenames:
 
+            log.info("")
             path = os.path.join(parent, filename)
             log.info("path:" + path)
 
@@ -73,9 +74,10 @@ class PngCompress2(object):
             t = os.path.getmtime(path)
             # 修改unix时间戳为time对象
             timestamp = datetime.datetime.fromtimestamp(t)
+            # log.info("timestamp:" + str(timestamp))
+            # log.info("self.last_update_time:" + str(self.last_update_time))
             if timestamp <= self.last_update_time:
                 log.info(filename + ": HAS NOT UPDATE SINCE LAST_UPDATE_TIME")
-                log.info("")
                 continue
 
             # 过滤关键字
@@ -83,7 +85,6 @@ class PngCompress2(object):
             for ignore in self.compress_config.compress_ignore_pattern:
                 if ignore in filename:
                     log.info("IGNORE:" + ignore + " in " + filename + " NO NEED TO COMPRESS")
-                    log.info("")
                     skip = True
             if skip:
                 continue

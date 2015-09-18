@@ -1,13 +1,15 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
+
+import sys
+import os
+
 __author__ = 'tiantong'
 rootdir = "/Users/easytang/Documents/Git/github/apkshrink"
 sys.path.append(rootdir)
 
 from apkshrink import shrink_loader
 from lib_apk_shrink.instrument.SizeCheck import SizeCheck
-import sys
-import os
 
 CHECK_SIZE_CONFIG_FILE = rootdir + '/config/res_check_size_config.json'
 
