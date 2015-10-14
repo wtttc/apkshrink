@@ -34,13 +34,13 @@ class JarDecompile(object):
 
         # 解压jar
         for jar_path in self.decompile_config.extra_jar:
-            command = 'unzip ' + jar_path + ' -d ' + self.output_path_out
+            command = 'unzip -o ' + jar_path + ' -d ' + self.output_path_out
             result = os.popen(command).read()
             self.delDir(META_path)
 
 
         # 反编译
-        command = jad_path + ' -r -ff -o -d ' + self.output_path_decompile + ' -s java ' + self.output_path_out + '/**/*.class'
+        command = jad_path + ' -r -o -ff -d ' + self.output_path_decompile + ' -s java ' + self.output_path_out + '/**/*.class'
         result = os.popen(command).read()
 
     def delDir(self, dir):

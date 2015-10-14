@@ -7,5 +7,7 @@
     ],
     "xml_dir": [
         ".../res/xml"
+    ],
+    "white_list":[
     ]
 }

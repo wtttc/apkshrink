@@ -122,6 +122,15 @@ class UselessLayout(object):
         layout_dirs = self.useless_layout_config.layout_dir
         for d, x in self.layout_dict.items():
             if x == 0:
+                ignore = False
+                for filter in self.useless_layout_config.white_list:
+                    if filter in str(d):
+                        ignore = True
+
+                if ignore:
+                    print("file:" + str(d) + " is in white list")
+                    continue
+
                 for dir in layout_dirs:
                     path = os.path.join(dir, str(d) + '.xml')
                     print(path)
