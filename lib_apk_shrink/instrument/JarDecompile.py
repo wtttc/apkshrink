@@ -40,7 +40,7 @@ class JarDecompile(object):
 
 
         # 反编译
-        command = jad_path + ' -r -ff -d ' + self.output_path_decompile + '-o -s java ' + self.output_path_out + '/**/*.class'
+        command = jad_path + ' -r -ff -o -d ' + self.output_path_decompile + ' -s java ' + self.output_path_out + '/**/*.class'
         result = os.popen(command).read()
 
     def delDir(self, dir):
