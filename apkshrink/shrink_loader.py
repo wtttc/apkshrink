@@ -4,7 +4,7 @@
 # 从配置文件中读取压缩设置
 import json
 
-from lib_apk_shrink.model import CompressConfig, CheckSizeConfig, CheckAlphaConfig, CompressState, WebPConfig, \
+from lib_apk_shrink.model import CompressConfig,  CompressState, WebPConfig, \
     DecompileConfig, UselessLayoutConfig, UselessDrawableConfig
 from lib_apk_shrink.utils import shrink_utils
 
@@ -20,20 +20,6 @@ def init_compress_state(file_path):
     _json = shrink_utils.get_json_from_file(file_path)
     _compress_state = CompressState.CompressState(_json)
     return _compress_state
-
-
-# 从配置文件中读取检查大小的设置
-def init_check_size_config(file_path):
-    _json = shrink_utils.get_json_from_file(file_path)
-    _check_size_config = CheckSizeConfig.CheckSizeConfig(_json)
-    return _check_size_config
-
-
-# 从配置文件中读取检查太大非透明png的设置
-def init_check_alpha_config(file_path):
-    _json = shrink_utils.get_json_from_file(file_path)
-    check_alpha_config = CheckAlphaConfig.CheckAlphaConfig(_json)
-    return check_alpha_config
 
 
 # 从配置文件中读取webP转换配置
