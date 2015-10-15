@@ -70,7 +70,7 @@ class UselessDrawable(object):
 
         # extra_jar_path中搜寻
         if self.extra_jar_path is not None:
-            self.find_dict_in_rootpath(self.extra_jar_path, self.drawable_dict)
+            self.find_dict_in_rootpath(self.extra_jar_path, self.drawable_dict, True)
         print ""
         print "after search extra_jar_path:"
         print self.drawable_dict
@@ -78,7 +78,7 @@ class UselessDrawable(object):
     # 查找指定dict 在指定 文件夹下的匹配次数
     # rootpath：要查找的文件夹路径
     # set： 要查找的文件名set
-    def find_dict_in_rootpath(self, rootpath, dict):
+    def find_dict_in_rootpath(self, rootpath, dict, raw=False):
         for parent, dirnames, filenames in os.walk(rootpath):  # 三个参数：分别返回1.父目录 2.所有文件夹名字（不含路径） 3.所有文件名字
             for filename in filenames:  # 输出文件信息
                 if "svn-base" in filename:
@@ -94,7 +94,8 @@ class UselessDrawable(object):
                     search_string = pic_name
                     # R.layout.xxx 结尾是 空格 ) ;
                     # TODO 注释中的还会搜出来
-                    search_string = 'R.drawable.' + search_string + r'[;|)|,|\s]'
+                    if not raw:
+                        search_string = 'R.drawable.' + search_string + r'[;|)|,|\s]'
                     sp = re.findall(search_string, file_content)
                     print("search_string:" + search_string)
                     print("filename:" + filename)
@@ -147,6 +148,14 @@ class UselessDrawable(object):
                     for p, d, f in os.walk(dir):
                         for sd in d:
                             if "drawable" not in sd:
+                                continue
+                            ignore = False
+                            for filter in self.useless_drawable_config.white_list:
+                                if filter in str(d):
+                                    ignore = True
+
+                            if ignore:
+                                print("file:" + str(d) + " is in white list")
                                 continue
                             path = os.path.join(p, sd, filename1)
                             self.remove_file(path)
