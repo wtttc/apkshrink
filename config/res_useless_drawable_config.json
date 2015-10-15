@@ -8,5 +8,7 @@
     "extra_xml": [
         ".../AndroidManifest.xml",
         ".../values/style.xml"
+    ],
+    "white_list":[
     ]
 }

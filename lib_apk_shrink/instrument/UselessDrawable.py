@@ -149,6 +149,14 @@ class UselessDrawable(object):
                         for sd in d:
                             if "drawable" not in sd:
                                 continue
+                            ignore = False
+                            for filter in self.useless_drawable_config.white_list:
+                                if filter in str(d):
+                                    ignore = True
+
+                            if ignore:
+                                print("file:" + str(d) + " is in white list")
+                                continue
                             path = os.path.join(p, sd, filename1)
                             self.remove_file(path)
                             path = os.path.join(p, sd, filename2)
