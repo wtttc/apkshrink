@@ -49,15 +49,15 @@ class UselessDrawable(object):
         print "after search res_dir:"
         print self.drawable_dict
 
-        extra_xml = self.useless_drawable_config.extra_xml
-        for extra_one in extra_xml:
+        extra = self.useless_drawable_config.extra
+        for extra_one in extra:
             # print(extra_one)
             try:
-                self.find_dict_in_xml_file(extra_one, self.drawable_dict, True)
+                self.find_dict_in_file(extra_one, self.drawable_dict, True)
             except Exception:
                 print("catch exception")
         print ""
-        print "after search extra_xml:"
+        print "after search extra:"
         print self.drawable_dict
 
         # src中搜寻
@@ -87,6 +87,7 @@ class UselessDrawable(object):
                 file_path = os.path.join(parent, filename)  # 输出文件路径信息
                 file_object = open(file_path)
                 file_content = file_object.read()  # 获得当前文件的内容
+                print("filename:" + filename)
                 for pic_name in dict.keys():
                     if self.fast_search and dict[pic_name] > 0:
                         # 已经查到的就不在搜索
@@ -94,12 +95,13 @@ class UselessDrawable(object):
                     search_string = pic_name
                     # R.layout.xxx 结尾是 空格 ) ;
                     # TODO 注释中的还会搜出来
-                    if not raw:
-                        search_string = 'R.drawable.' + search_string + r'[;|)|,|\s]'
-                    sp = re.findall(search_string, file_content)
-                    print("search_string:" + search_string)
-                    print("filename:" + filename)
-                    count = len(sp)
+                    # TODO getIdentifier 超麻烦
+                    # if not raw:
+                    #     search_string = '(R.drawable.' + search_string + r'[;|)|,|\s|:])|getIdentifier.*' + search_string + ')'
+                    # sp = re.findall(search_string, file_content)
+                    # print("search_string:" + search_string)
+                    # count = len(sp)
+                    count = file_content.count(search_string)
                     if count > 0:
                         dict[pic_name] += count  # 更新每个图片的引用次数
                 file_object.close();
@@ -111,9 +113,13 @@ class UselessDrawable(object):
                 if "xml" not in filename:
                     continue;
                 file_path = os.path.join(parent, filename)  # 输出文件路径信息
-                self.find_dict_in_xml_file(file_path, dict)
+                print("filename:" + filename)
+                if "drawable" in parent or "layout" in parent:
+                    self.find_dict_in_file(file_path, dict)
+                else:
+                    self.find_dict_in_file(file_path, dict, True)
 
-    def find_dict_in_xml_file(self, file_path, dict, extra=False):
+    def find_dict_in_file(self, file_path, dict, extra=False):
         file_object = open(file_path)
         file_content = file_object.read()  # 获得当前文件的内容
         for pic_name in dict.keys():
@@ -124,9 +130,7 @@ class UselessDrawable(object):
             # 检查layout xml的方式主要寻找 include viewStub的方式
             # 引号也要查找，避免碰到前缀一样的 如:"main"&"main_layout"
             # TODO XML中解析DOM获取已经引用的drawable
-            if extra:
-                search_string = '@drawable/' + search_string
-            else:
+            if not extra:
                 search_string = '"@drawable/' + search_string + '"'
             dict[pic_name] += file_content.count(search_string)  # 更新每个图片的引用次数
         file_object.close();
@@ -142,20 +146,23 @@ class UselessDrawable(object):
         for dir in res_dir:
             for pic_name in self.drawable_dict.keys():
                 if self.drawable_dict[pic_name] == 0:
+
+                    ignore = False
+                    for filter in self.useless_drawable_config.white_list:
+                        if filter in str(pic_name):
+                            ignore = True
+
+                    if ignore:
+                        print("file:" + str(pic_name) + " is in white list")
+                        continue
+
                     filename1 = pic_name + '.xml'
                     filename2 = pic_name + '.9.png'
                     filename3 = pic_name + '.png'
+
                     for p, d, f in os.walk(dir):
                         for sd in d:
                             if "drawable" not in sd:
-                                continue
-                            ignore = False
-                            for filter in self.useless_drawable_config.white_list:
-                                if filter in str(d):
-                                    ignore = True
-
-                            if ignore:
-                                print("file:" + str(d) + " is in white list")
                                 continue
                             path = os.path.join(p, sd, filename1)
                             self.remove_file(path)
@@ -164,7 +171,7 @@ class UselessDrawable(object):
                             path = os.path.join(p, sd, filename3)
                             self.remove_file(path)
 
-    def remove_file(path):
+    def remove_file(self, path):
         if os.path.exists(path):
             os.remove(path)
             print(path + " is removed")

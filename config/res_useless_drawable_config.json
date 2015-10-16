@@ -5,9 +5,8 @@
     "res_dir": [
         ".../res"
     ],
-    "extra_xml": [
-        ".../AndroidManifest.xml",
-        ".../values/style.xml"
+    "extra": [
+        ".../AndroidManifest.xml"
     ],
     "white_list":[
     ]
