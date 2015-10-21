@@ -95,11 +95,14 @@ def get_path_size(strPath):
     return nTotalSize;
 
 
-def compress_diff_file(res_floder, tool, old_dict_file):
+def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None):
     tool = BatchShrink(tool)
     old_dict = MakeResPicDict.read_dict_from_file(old_dict_file)
 
     temp_dict = cur_file_dir() + os.path.sep + "temp_dict.txt"
+    if out_floder is not None:
+        temp_dict = out_floder + os.path.sep + "temp_dict.txt"
+
     MakeResPicDict.make_res_pic_dict(res_floder, temp_dict)
     new_dict = MakeResPicDict.read_dict_from_file(temp_dict)
 
@@ -164,6 +167,7 @@ def usage():
     print '-r, --res      : input weibo res floder path'
     print '-t, --tool     : ImageOptim path.'
     print '-d, --dict     : ResPicDict file path.'
+    print '-o, --out      : Temp out dir.'
     print '----------------------------------------'
 
 
@@ -176,8 +180,9 @@ if "__main__" == __name__:
     res_floder = None
     tool = None
     old_dict = None
+    out_floder = None
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hr:t:d:", ["help", "output="])
+        opts, args = getopt.getopt(sys.argv[1:], "hr:t:d:o:", ["help", "output="])
 
         # check all param
         for opt, arg in opts:
@@ -190,6 +195,8 @@ if "__main__" == __name__:
                 tool = arg
             if opt in ("-d", "--dict"):
                 old_dict = arg
+            if opt in ("-o", "--out"):
+                out_floder = arg
 
     except getopt.GetoptError, e:
         print("getopt error! " + e.msg);
@@ -198,4 +205,4 @@ if "__main__" == __name__:
     if res_floder is None or tool is None or old_dict is None:
         exit()
         # TODO mail
-    compress_diff_file(res_floder, tool + '/Contents/MacOS/ImageOptim', old_dict)
+    compress_diff_file(res_floder, tool + '/Contents/MacOS/ImageOptim', old_dict, out_floder)
