@@ -34,18 +34,24 @@ def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None, white_l
     if white_list_file is not None:
         white_list_set = Utils.read_set_from_file(white_list_file)
 
-    temp_dict = Utils.cur_file_dir() + os.path.sep + "temp_dict.txt"
-    if out_floder is not None:
-        temp_dict = out_floder + os.path.sep + "temp_dict.txt"
+    if out_floder is None:
+        out_floder = os.path.join(Utils.cur_file_dir(), "temp")
+    # 保证temp存在
+    if not os.path.exists(out_floder):
+        os.makedirs(out_floder)
 
-    MakeResPicDict.make_res_pic_dict(res_floder, temp_dict)
+    temp_dict = out_floder + os.path.sep + "temp_dict"
+    print("temp file path:" + str(temp_dict))
+
+    MakeResPicDict.make_res_pic_dict(res_floder, temp_dict, white_list_file)
+
     new_dict = Utils.read_dict_from_file(temp_dict)
 
     # 对比检查出新修改的文件
     file_to_compress = set()
 
     for k, v in new_dict.items():
-        if k in old_dict:
+        if old_dict is not None and k in old_dict:
             if old_dict[k] != new_dict[k]:
                 # changed
                 file_to_compress.add(k)
@@ -55,10 +61,7 @@ def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None, white_l
 
     print("file_to_compress:" + str(file_to_compress))
 
-    output_dir = os.path.join(Utils.cur_file_dir(), "temp")
-    # 保证temp存在
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+
 
     # 遍历复制修改的文件到temp
     for parent, dirnames, filenames in os.walk(res_floder):
@@ -76,7 +79,7 @@ def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None, white_l
                             print("file:" + ssf + " is filtered")
                             continue
                         # 保证输出文件夹存在
-                        out_dir = os.path.join(output_dir, d)
+                        out_dir = os.path.join(out_floder, d)
                         out_file = os.path.join(out_dir, ssf)
                         # 保证指定drawable文件夹存在
                         if not os.path.exists(out_dir):
@@ -86,14 +89,15 @@ def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None, white_l
 
     # 压缩文件夹下地图片
     if len(file_to_compress) > 0:
-        out = tool.compress(output_dir)
+        out = tool.compress(out_floder)
         print("shirnked:" + str(out))
     # 复制压缩的文件回原来的路径
-    Utils.copyTree(output_dir, res_floder)  # 删除临时输出文件夹
-    if output_dir:
-        shutil.rmtree(output_dir)
-    if temp_dict:
+    if os.path.isfile(temp_dict):
+        # 移除临时dict
         os.remove(temp_dict)
+    Utils.copyTree(out_floder, res_floder)  # 删除临时输出文件夹
+    if out_floder:
+        shutil.rmtree(out_floder)
     # 更新图片的dict
     MakeResPicDict.make_res_pic_dict(res_floder, old_dict_file, white_list_file)
 

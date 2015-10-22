@@ -10,4 +10,5 @@ OUT_TEMP_FLODER = ".../bin"
 
 command = "python CompressChangedPic.py -r %s -t %s -d %s -o %s -w %s" % (
     RES_FLODER, IMAGE_OPTIM_PATH, COMPARE_DICT, OUT_TEMP_FLODER, WHITE_LIST_FILE)
-os.popen(command).read()
+out = os.popen(command).read()
+print(out)
