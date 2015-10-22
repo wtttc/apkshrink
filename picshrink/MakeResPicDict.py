@@ -42,8 +42,12 @@ def calc_MD5(filepath):
         return None
 
 
-def make_res_pic_dict(res_floder, out_file):
+def make_res_pic_dict(res_floder, out_file, white_list_file=None):
+    white_list_set = None
+    if white_list_file is not None:
+        white_list_set = Utils.read_set_from_file(white_list_file)
     res_pic_dict = dict()
+
     for p, d, _ in os.walk(res_floder):
         for sd in d:
             # 查出带drawable的文件夹
@@ -58,6 +62,9 @@ def make_res_pic_dict(res_floder, out_file):
                     if find_filter(sf):
                         continue
                     if not find_match(sf):
+                        continue
+                    if white_list_set is not None and sf in white_list_set:
+                        print("file:" + sf + " is filtered")
                         continue
                     # 获取到res/的路径
                     file_path = os.path.join(sp, sf)
@@ -75,6 +82,7 @@ def usage():
     print '-h, --help     : print help message.'
     print '-r, --res      : input weibo res floder path'
     print '-o, --out      : output file path'
+    print '-w, --whitelist : White list.'
     print '----------------------------------------'
 
 
@@ -86,9 +94,10 @@ def exit():
 if "__main__" == __name__:
     res_floder = None
     out_file = None
+    white_list_file = None
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hr:o:", ["help", "output="])
+        opts, args = getopt.getopt(sys.argv[1:], "hr:o:w:", ["help", "output="])
 
         # check all param
         for opt, arg in opts:
@@ -98,6 +107,8 @@ if "__main__" == __name__:
             if opt in ("-r", "--res"):
                 res_floder = arg
             if opt in ("-o", "--out"):
+                out_file = arg
+            if opt in ("-w", "--whitelist"):
                 out_file = arg
 
     except getopt.GetoptError, e:
@@ -110,4 +121,4 @@ if "__main__" == __name__:
         print("output file is not set, default res_pic_dict.txt will be used.")
         out_file = Utils.cur_file_dir() + os.path.sep + "res_pic_dict.txt"
     print("")
-    make_res_pic_dict(res_floder, out_file)
+    make_res_pic_dict(res_floder, out_file, white_list_file)

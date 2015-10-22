@@ -29,14 +29,17 @@ class BatchShrink(object):
 
 def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None, white_list_file=None):
     tool = BatchShrink(tool)
-    old_dict = MakeResPicDict.read_dict_from_file(old_dict_file)
+    old_dict = Utils.read_dict_from_file(old_dict_file)
+    white_list_set = None
+    if white_list_file is not None:
+        white_list_set = Utils.read_set_from_file(white_list_file)
 
     temp_dict = Utils.cur_file_dir() + os.path.sep + "temp_dict.txt"
     if out_floder is not None:
         temp_dict = out_floder + os.path.sep + "temp_dict.txt"
 
     MakeResPicDict.make_res_pic_dict(res_floder, temp_dict)
-    new_dict = MakeResPicDict.read_dict_from_file(temp_dict)
+    new_dict = Utils.read_dict_from_file(temp_dict)
 
     # 对比检查出新修改的文件
     file_to_compress = set()
@@ -69,7 +72,9 @@ def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None, white_l
                     dict_key = file_path[dict_key_index:]
                     # print("key:" + str(dict_key))
                     if dict_key in file_to_compress:
-
+                        if white_list_set is not None and ssf in white_list_set:
+                            print("file:" + ssf + " is filtered")
+                            continue
                         # 保证输出文件夹存在
                         out_dir = os.path.join(output_dir, d)
                         out_file = os.path.join(out_dir, ssf)
@@ -90,7 +95,7 @@ def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None, white_l
     if temp_dict:
         os.remove(temp_dict)
     # 更新图片的dict
-    MakeResPicDict.make_res_pic_dict(res_floder, old_dict_file)
+    MakeResPicDict.make_res_pic_dict(res_floder, old_dict_file, white_list_file)
 
 
 def usage():
