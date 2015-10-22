@@ -109,7 +109,7 @@ if "__main__" == __name__:
             if opt in ("-o", "--out"):
                 out_file = arg
             if opt in ("-w", "--whitelist"):
-                out_file = arg
+                white_list_file = arg
 
     except getopt.GetoptError, e:
         print("getopt error! " + e.msg);
@@ -121,4 +121,6 @@ if "__main__" == __name__:
         print("output file is not set, default res_pic_dict.txt will be used.")
         out_file = Utils.cur_file_dir() + os.path.sep + "res_pic_dict.txt"
     print("")
+    # print("res_floder:" + str(res_floder))
+    # print("white_list_file:" + str(white_list_file))
     make_res_pic_dict(res_floder, out_file, white_list_file)
