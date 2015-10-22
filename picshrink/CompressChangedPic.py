@@ -6,6 +6,7 @@ import sys
 import shutil
 
 import MakeResPicDict
+import Utils
 
 __author__ = 'tiantong'
 
@@ -18,88 +19,19 @@ class BatchShrink(object):
 
     def compress(self, floder_string):
         command = self.command + " " + floder_string
-        old_size = get_path_size(floder_string);
+
+        old_size = Utils.get_path_size(floder_string);
         os.popen(command).read()
-        new_size = get_path_size(floder_string);
+        new_size = Utils.get_path_size(floder_string);
         chg_size = long(old_size) - long(new_size)
         return chg_size;
 
 
-# 获取当前路径
-def cur_file_dir():
-    # 获取脚本路径
-    path = sys.path[0]
-    # 判断为脚本文件还是py2exe编译后的文件，如果是脚本文件，则返回的是脚本的目录，如果是py2exe编译后的文件，则返回的是编译后的文件路径
-    if os.path.isdir(path):
-        return path
-    elif os.path.isfile(path):
-        return os.path.dirname(path)
-
-
-def forceMergeFlatDir(srcDir, dstDir):
-    if not os.path.exists(dstDir):
-        os.makedirs(dstDir)
-    for item in os.listdir(srcDir):
-        srcFile = os.path.join(srcDir, item)
-        dstFile = os.path.join(dstDir, item)
-        forceCopyFile(srcFile, dstFile)
-
-
-def forceCopyFile(sfile, dfile):
-    if os.path.isfile(sfile):
-        shutil.copy2(sfile, dfile)
-
-
-def isAFlatDir(sDir):
-    for item in os.listdir(sDir):
-        sItem = os.path.join(sDir, item)
-        if os.path.isdir(sItem):
-            return False
-    return True
-
-
-def copyTree(src, dst):
-    for item in os.listdir(src):
-        s = os.path.join(src, item)
-        d = os.path.join(dst, item)
-        if os.path.isfile(s):
-            if not os.path.exists(dst):
-                os.makedirs(dst)
-            forceCopyFile(s, d)
-        if os.path.isdir(s):
-            isRecursive = not isAFlatDir(s)
-            if isRecursive:
-                copyTree(s, d)
-            else:
-                forceMergeFlatDir(s, d)
-
-
-# 获取路径文件or文件夹大小
-def get_path_size(strPath):
-    if not os.path.exists(strPath):
-        return 0;
-
-    if os.path.isfile(strPath):
-        return os.path.getsize(strPath);
-
-    nTotalSize = 0;
-    for strRoot, lsDir, lsFiles in os.walk(strPath):
-        # get child directory size
-        for strDir in lsDir:
-            nTotalSize = nTotalSize + get_path_size(os.path.join(strRoot, strDir));
-
-            # for child file size
-        for strFile in lsFiles:
-            nTotalSize = nTotalSize + os.path.getsize(os.path.join(strRoot, strFile));
-
-    return nTotalSize;
-
-
-def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None):
+def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None, white_list_file=None):
     tool = BatchShrink(tool)
     old_dict = MakeResPicDict.read_dict_from_file(old_dict_file)
 
-    temp_dict = cur_file_dir() + os.path.sep + "temp_dict.txt"
+    temp_dict = Utils.cur_file_dir() + os.path.sep + "temp_dict.txt"
     if out_floder is not None:
         temp_dict = out_floder + os.path.sep + "temp_dict.txt"
 
@@ -120,7 +52,7 @@ def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None):
 
     print("file_to_compress:" + str(file_to_compress))
 
-    output_dir = os.path.join(cur_file_dir(), "temp")
+    output_dir = os.path.join(Utils.cur_file_dir(), "temp")
     # 保证temp存在
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -152,7 +84,7 @@ def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None):
         out = tool.compress(output_dir)
         print("shirnked:" + str(out))
     # 复制压缩的文件回原来的路径
-    copyTree(output_dir, res_floder)  # 删除临时输出文件夹
+    Utils.copyTree(output_dir, res_floder)  # 删除临时输出文件夹
     if output_dir:
         shutil.rmtree(output_dir)
     if temp_dict:
@@ -163,11 +95,12 @@ def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None):
 
 def usage():
     print '------------apkcompare.py usage:------------'
-    print '-h, --help     : print help message.'
-    print '-r, --res      : input weibo res floder path'
-    print '-t, --tool     : ImageOptim path.'
-    print '-d, --dict     : ResPicDict file path.'
-    print '-o, --out      : Temp out dir.'
+    print '-h, --help      : print help message.'
+    print '-r, --res       : input weibo res floder path'
+    print '-t, --tool      : ImageOptim path.'
+    print '-d, --dict      : ResPicDict file path.'
+    print '-o, --out       : Temp out dir.'
+    print '-w, --whitelist : White list.'
     print '----------------------------------------'
 
 
@@ -181,8 +114,9 @@ if "__main__" == __name__:
     tool = None
     old_dict = None
     out_floder = None
+    white_list_file = None
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hr:t:d:o:", ["help", "output="])
+        opts, args = getopt.getopt(sys.argv[1:], "hr:t:d:o:w:", ["help", "output="])
 
         # check all param
         for opt, arg in opts:
@@ -197,6 +131,8 @@ if "__main__" == __name__:
                 old_dict = arg
             if opt in ("-o", "--out"):
                 out_floder = arg
+            if opt in ("-w", "--whitelist"):
+                white_list_file = arg
 
     except getopt.GetoptError, e:
         print("getopt error! " + e.msg);
@@ -205,4 +141,4 @@ if "__main__" == __name__:
     if res_floder is None or tool is None or old_dict is None:
         exit()
         # TODO mail
-    compress_diff_file(res_floder, tool + '/Contents/MacOS/ImageOptim', old_dict, out_floder)
+    compress_diff_file(res_floder, tool + '/Contents/MacOS/ImageOptim', old_dict, out_floder, white_list_file)

@@ -3,42 +3,15 @@
 __author__ = 'tiantong'
 
 import hashlib
-import json
 import os
 import getopt
 import sys
 
+import Utils
+
 FILE_TYPE = ["png", "jpg", "jpeg", "bmp"]
-FILTER_LIST = [".9.",".DS_Store"]
+FILTER_LIST = [".9.", ".DS_Store"]
 RES_NAME = "res" + os.path.sep
-
-
-def cur_file_dir():
-    # 获取脚本路径
-    path = sys.path[0]
-    # 判断为脚本文件还是py2exe编译后的文件，如果是脚本文件，则返回的是脚本的目录，如果是py2exe编译后的文件，则返回的是编译后的文件路径
-    if os.path.isdir(path):
-        return path
-    elif os.path.isfile(path):
-        return os.path.dirname(path)
-
-
-def save_to_file(filePath, dict):
-    try:
-        output_s = open(filePath, 'w+')
-        output = json.dumps(
-            dict, ensure_ascii=False, indent=4, sort_keys=True)
-        output_s.write(output)
-        output_s.flush()
-    except Exception, e:
-        print e
-
-
-def read_dict_from_file(filePath):
-    try:
-        return json.load(open(filePath))
-    except Exception, ex:
-        print "Error:" + str(ex)
 
 
 # 过滤文件
@@ -94,7 +67,7 @@ def make_res_pic_dict(res_floder, out_file):
                     # print("dict_key:" + str(dict_key))
                     # print("dict_value:" + str(dict_value))
                     res_pic_dict[dict_key] = dict_value
-    save_to_file(out_file, res_pic_dict)
+    Utils.save_dict_to_file(out_file, res_pic_dict)
 
 
 def usage():
@@ -135,6 +108,6 @@ if "__main__" == __name__:
         exit()
     if out_file is None:
         print("output file is not set, default res_pic_dict.txt will be used.")
-        out_file = cur_file_dir() + os.path.sep + "res_pic_dict.txt"
+        out_file = Utils.cur_file_dir() + os.path.sep + "res_pic_dict.txt"
     print("")
     make_res_pic_dict(res_floder, out_file)
