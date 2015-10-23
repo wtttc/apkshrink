@@ -36,6 +36,9 @@ def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None, white_l
 
     if out_floder is None:
         out_floder = os.path.join(Utils.cur_file_dir(), "temp")
+    else:
+        out_floder = os.path.join(out_floder, "temp")
+
     # 保证temp存在
     if not os.path.exists(out_floder):
         os.makedirs(out_floder)
