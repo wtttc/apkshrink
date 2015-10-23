@@ -88,13 +88,15 @@ def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None, white_l
                             shutil.copy(file_path, out_file)
 
     # 压缩文件夹下地图片
+    print("")
     if len(file_to_compress) > 0:
         out = tool.compress(out_floder)
         print("shirnked:" + str(out))
-    # 复制压缩的文件回原来的路径
+
+    # 移除临时dict
     if os.path.isfile(temp_dict):
-        # 移除临时dict
         os.remove(temp_dict)
+    # 复制压缩的文件回原来的路径
     Utils.copyTree(out_floder, res_floder)  # 删除临时输出文件夹
     if out_floder:
         shutil.rmtree(out_floder)
