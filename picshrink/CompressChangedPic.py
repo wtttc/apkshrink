@@ -94,7 +94,8 @@ def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None, white_l
     print("")
     if len(file_to_compress) > 0:
         out = tool.compress(out_floder)
-        print("shirnked:" + str(out))
+        print("shirnked " + str(len(file_to_compress)) + " files")
+        print("shirnked:" + Utils.get_size_in_nice_string(out))
 
     # 移除临时dict
     if os.path.isfile(temp_dict):
