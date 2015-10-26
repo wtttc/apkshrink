@@ -102,7 +102,7 @@ def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None, white_l
                         # print("key:" + str(dict_key))
                         if dict_key in file_to_compress:
                             if white_list_set is not None and ssf in white_list_set:
-                                print("file:" + ssf + " is filtered")
+                                print("file: " + ssf + " is filtered")
                                 continue
                             # 保证输出文件夹存在
                             out_dir = os.path.join(out_floder, d)
