@@ -155,5 +155,6 @@ if "__main__" == __name__:
 
     if res_floder is None or tool is None or old_dict is None:
         exit()
-        # TODO mail
+
     compress_diff_file(res_floder, tool + '/Contents/MacOS/ImageOptim', old_dict, out_floder, white_list_file)
+
