@@ -21,7 +21,17 @@ class BatchShrink(object):
         command = self.command + " " + floder_string
 
         old_size = Utils.get_path_size(floder_string);
-        os.popen(command).read()
+        out = ""
+        try:
+            cmd_out = os.popen(command).read()
+            out += cmd_out
+        except Exception, e:
+            out += e.message
+
+        if len(out) > 0:
+            print("")
+            print("ImageOptim output:" + out)
+            print("")
         new_size = Utils.get_path_size(floder_string);
         chg_size = long(old_size) - long(new_size)
         return chg_size;
@@ -99,6 +109,7 @@ def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None, white_l
     print("")
     if len(file_to_compress) > 0:
         out = tool.compress(out_floder)
+
         print("shirnked " + str(len(file_to_compress)) + " files")
         print("shirnked:" + Utils.get_size_in_nice_string(out))
 
