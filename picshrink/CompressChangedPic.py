@@ -44,7 +44,7 @@ def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None, white_l
         os.makedirs(out_floder)
 
     temp_dict = out_floder + os.path.sep + "temp_dict"
-    print("temp file path:" + str(temp_dict))
+    # print("temp file path:" + str(temp_dict))
 
     MakeResPicDict.make_res_pic_dict(res_floder, temp_dict, white_list_file)
 
@@ -62,7 +62,12 @@ def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None, white_l
             # new
             file_to_compress.add(k)
 
-    print("file_to_compress:" + str(file_to_compress))
+    if len(file_to_compress) > 0:
+        print("file_to_compress:")
+        for item in file_to_compress:
+            print("file: " + str(item))
+    else:
+        print("There's no file to compress")
 
 
 
@@ -157,4 +162,3 @@ if "__main__" == __name__:
         exit()
 
     compress_diff_file(res_floder, tool + '/Contents/MacOS/ImageOptim', old_dict, out_floder, white_list_file)
-
