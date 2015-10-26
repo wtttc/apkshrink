@@ -43,6 +43,8 @@ def calc_MD5(filepath):
 
 
 def make_res_pic_dict(res_floder, out_file, white_list_file=None):
+    print("")
+    print("Try to make file dict")
     white_list_set = None
     if white_list_file is not None:
         white_list_set = Utils.read_set_from_file(white_list_file)
@@ -57,19 +59,19 @@ def make_res_pic_dict(res_floder, out_file, white_list_file=None):
             else:
                 continue
             sub_floder_path = os.path.join(p, sd)
-            for sp, _, f in os.walk(sub_floder_path):
+            for sp, sd, f in os.walk(sub_floder_path):
                 for sf in f:
                     if find_filter(sf):
                         continue
                     if not find_match(sf):
                         continue
-                    if white_list_set is not None and sf in white_list_set:
-                        print("file:" + sf + " is filtered")
-                        continue
-                    # 获取到res/的路径
+                        # 获取到res/的路径
                     file_path = os.path.join(sp, sf)
                     dict_key_index = file_path.find(RES_NAME)
                     dict_key = file_path[dict_key_index:]
+                    if white_list_set is not None and sf in white_list_set:
+                        print("file:" + dict_key + " is filtered")
+                        continue
                     dict_value = calc_MD5(file_path)
                     # print("dict_key:" + str(dict_key))
                     # print("dict_value:" + str(dict_value))

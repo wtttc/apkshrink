@@ -8,14 +8,14 @@ import smtplib
 __author__ = 'tiantong'
 
 # MIMEText should has been used on mail_content
-def sendMail(mail_content, email_from, email_to, user_name, password, smtpurl, smtpport, list_to_send):
+def sendMail(mail_content, subject,email_from, email_to, user_name, password, smtpurl, smtpport, list_to_send):
     emailto = email_to
     emailfrom = email_from
 
     message = MIMEMultipart('alternative')
     message['To'] = ", ".join(emailto)
     message['From'] = emailfrom
-    message['Subject'] = 'Test email'
+    message['Subject'] = subject
 
     storeplain = MIMEText(mail_content, 'plain')
     plaintextemailmessage = unicode(storeplain)

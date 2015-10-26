@@ -80,6 +80,7 @@ def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None, white_l
                 # new
                 file_to_compress.add(k)
 
+        print("")
         if len(file_to_compress) > 0:
             print("file_to_compress:")
             for item in file_to_compress:

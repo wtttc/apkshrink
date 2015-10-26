@@ -17,13 +17,14 @@ command = "python CompressChangedPic.py -r %s -t %s -d %s -o %s -w %s" % (
 
 def mail(out):
     mail_content = out
+    subject = "..."
     email_from = "..."
     email_to = ["..."]
     user_name = "..."
     password = "..."
     SMPT_URL = "..."
     SMPT_PORT = 587
-    mail_util.sendMail(mail_content, email_from, email_to, user_name, password, SMPT_URL, SMPT_PORT, None)
+    mail_util.sendMail(mail_content, subject, email_from, email_to, user_name, password, SMPT_URL, SMPT_PORT, None)
 
 
 if __name__ == '__main__':
