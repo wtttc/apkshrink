@@ -38,12 +38,15 @@ class BatchShrink(object):
 
 
 def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None, white_list_file=None):
+    # 初始化工具和参数
     tool = BatchShrink(tool)
+    # 获取原始dict
     old_dict = Utils.read_dict_from_file(old_dict_file)
+    # 获取白名单
     white_list_set = None
     if white_list_file is not None:
         white_list_set = Utils.read_set_from_file(white_list_file)
-
+    # 获取临时输出文件
     if out_floder is None:
         out_floder = os.path.join(Utils.cur_file_dir(), "temp")
     else:
@@ -53,20 +56,21 @@ def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None, white_l
     if not os.path.exists(out_floder):
         os.makedirs(out_floder)
 
+    # 临时dict位置
     temp_dict = out_floder + os.path.sep + "temp_dict"
     # print("temp file path:" + str(temp_dict))
 
     success = 0
 
     try:
-
+        # 生成临时dict，用作比对
         MakeResPicDict.make_res_pic_dict(res_floder, temp_dict, white_list_file)
-
         new_dict = Utils.read_dict_from_file(temp_dict)
 
         # 对比检查出新修改的文件
         file_to_compress = set()
 
+        # 检查出新增和变化的图片文件
         for k, v in new_dict.items():
             if old_dict is not None and k in old_dict:
                 if old_dict[k] != new_dict[k]:
@@ -82,7 +86,6 @@ def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None, white_l
                 print("file: " + str(item))
         else:
             print("There's no file to compress")
-
 
 
         # 遍历复制修改的文件到temp
