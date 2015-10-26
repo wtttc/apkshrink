@@ -56,68 +56,75 @@ def compress_diff_file(res_floder, tool, old_dict_file, out_floder=None, white_l
     temp_dict = out_floder + os.path.sep + "temp_dict"
     # print("temp file path:" + str(temp_dict))
 
-    MakeResPicDict.make_res_pic_dict(res_floder, temp_dict, white_list_file)
+    success = 0
 
-    new_dict = Utils.read_dict_from_file(temp_dict)
+    try:
 
-    # 对比检查出新修改的文件
-    file_to_compress = set()
+        MakeResPicDict.make_res_pic_dict(res_floder, temp_dict, white_list_file)
 
-    for k, v in new_dict.items():
-        if old_dict is not None and k in old_dict:
-            if old_dict[k] != new_dict[k]:
-                # changed
+        new_dict = Utils.read_dict_from_file(temp_dict)
+
+        # 对比检查出新修改的文件
+        file_to_compress = set()
+
+        for k, v in new_dict.items():
+            if old_dict is not None and k in old_dict:
+                if old_dict[k] != new_dict[k]:
+                    # changed
+                    file_to_compress.add(k)
+            else:
+                # new
                 file_to_compress.add(k)
+
+        if len(file_to_compress) > 0:
+            print("file_to_compress:")
+            for item in file_to_compress:
+                print("file: " + str(item))
         else:
-            # new
-            file_to_compress.add(k)
-
-    if len(file_to_compress) > 0:
-        print("file_to_compress:")
-        for item in file_to_compress:
-            print("file: " + str(item))
-    else:
-        print("There's no file to compress")
+            print("There's no file to compress")
 
 
 
-    # 遍历复制修改的文件到temp
-    for parent, dirnames, filenames in os.walk(res_floder):
-        for d in dirnames:
-            if "drawable" not in str(d):
-                continue
-            for sp, sd, sf in os.walk(os.path.join(parent, d)):
-                for ssf in sf:
-                    file_path = os.path.join(sp, ssf)
-                    dict_key_index = file_path.find(RES_NAME)
-                    dict_key = file_path[dict_key_index:]
-                    # print("key:" + str(dict_key))
-                    if dict_key in file_to_compress:
-                        if white_list_set is not None and ssf in white_list_set:
-                            print("file:" + ssf + " is filtered")
-                            continue
-                        # 保证输出文件夹存在
-                        out_dir = os.path.join(out_floder, d)
-                        out_file = os.path.join(out_dir, ssf)
-                        # 保证指定drawable文件夹存在
-                        if not os.path.exists(out_dir):
-                            os.makedirs(out_dir)
-                        if os.path.exists(file_path) and not os.path.exists(out_file):
-                            shutil.copy(file_path, out_file)
+        # 遍历复制修改的文件到temp
+        for parent, dirnames, filenames in os.walk(res_floder):
+            for d in dirnames:
+                if "drawable" not in str(d):
+                    continue
+                for sp, sd, sf in os.walk(os.path.join(parent, d)):
+                    for ssf in sf:
+                        file_path = os.path.join(sp, ssf)
+                        dict_key_index = file_path.find(RES_NAME)
+                        dict_key = file_path[dict_key_index:]
+                        # print("key:" + str(dict_key))
+                        if dict_key in file_to_compress:
+                            if white_list_set is not None and ssf in white_list_set:
+                                print("file:" + ssf + " is filtered")
+                                continue
+                            # 保证输出文件夹存在
+                            out_dir = os.path.join(out_floder, d)
+                            out_file = os.path.join(out_dir, ssf)
+                            # 保证指定drawable文件夹存在
+                            if not os.path.exists(out_dir):
+                                os.makedirs(out_dir)
+                            if os.path.exists(file_path) and not os.path.exists(out_file):
+                                shutil.copy(file_path, out_file)
 
-    # 压缩文件夹下地图片
-    print("")
-    if len(file_to_compress) > 0:
-        out = tool.compress(out_floder)
-
-        print("shirnked " + str(len(file_to_compress)) + " files")
-        print("shirnked:" + Utils.get_size_in_nice_string(out))
+        # 压缩文件夹下地图片
+        print("")
+        if len(file_to_compress) > 0:
+            out = tool.compress(out_floder)
+            print("shirnked " + str(len(file_to_compress)) + " files")
+            print("shirnked:" + Utils.get_size_in_nice_string(out))
+    except Exception, e:
+        success = 1
 
     # 移除临时dict
     if os.path.isfile(temp_dict):
         os.remove(temp_dict)
     # 复制压缩的文件回原来的路径
-    Utils.copyTree(out_floder, res_floder)  # 删除临时输出文件夹
+    if success == 0:
+        Utils.copyTree(out_floder, res_floder)
+    # 删除临时输出文件夹
     if out_floder:
         shutil.rmtree(out_floder)
     # 更新图片的dict
