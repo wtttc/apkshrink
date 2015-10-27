@@ -97,16 +97,21 @@ class UselessLayout(object):
                         # print("count:" + str(count))
                         dict[pic_name] += count  # 更新每个图片的引用次数
                     elif file_type == FILE_JAVA_OWN:
+                        # TODO 有部分代码使用了getIdentifier方法，比较蛋疼
                         search_string = 'R.layout.' + search_string + r'[;|)|,|\s]'
-                        sp = re.findall(search_string, file_content)
-                        count = len(sp)
+                        # if not self.fast_search:
+                        #     search_string1 = search_string1 + '|getIdentifier.*' + search_string
+                        sp1 = re.findall(search_string, file_content)
+                        count = len(sp1)
                         # print("filename:" + filename + " search_string:" + search_string)
                         # print("count:" + str(count))
+                        # count = file_content.count(search_string)
                         if count > 0:
                             dict[pic_name] += count  # 更新每个图片的引用次数
                     elif file_type == FILE_JAVA_THIRDPARTY:
-                        sp = re.findall(search_string, file_content)
-                        count = len(sp)
+                        count = file_content.count(search_string)
+                        # sp = re.findall(search_string, file_content)
+                        # count = len(sp)
                         # print("filename:" + filename + " search_string:" + search_string)
                         # print("count:" + str(count))
                         if count > 0:
