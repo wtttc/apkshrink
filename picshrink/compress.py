@@ -51,11 +51,13 @@ if __name__ == '__main__':
 
     out = "res_floder:" + res_floder + "\n"
 
-    RES_FLODER = res_floder + os.path.sep + "res"
-    IMAGE_OPTIM_PATH = Utils.cur_file_dir() + os.path.sep + "ImageOptim.app"
-    COMPARE_DICT = res_floder + os.path.sep + "build-tools" + os.path.sep + "res_pic_dict"
-    WHITE_LIST_FILE = res_floder + os.path.sep + "build-tools" + os.path.sep + "res_compress_white_list"
-    OUT_TEMP_FLODER = res_floder + os.path.sep + "bin"
+    print("res_floder:" + res_floder)
+
+    RES_FLODER = os.path.join(res_floder, "res")
+    IMAGE_OPTIM_PATH = os.path.join(Utils.cur_file_dir(), "ImageOptim.app")
+    COMPARE_DICT = os.path.join(res_floder, "build-tools", "res_pic_dict")
+    WHITE_LIST_FILE = os.path.join(res_floder, "build-tools", "res_compress_white_list")
+    OUT_TEMP_FLODER = os.path.join(res_floder, "bin")
 
     command = "python CompressChangedPic.py -r %s -t %s -d %s -o %s -w %s" % (
         RES_FLODER, IMAGE_OPTIM_PATH, COMPARE_DICT, OUT_TEMP_FLODER, WHITE_LIST_FILE)
