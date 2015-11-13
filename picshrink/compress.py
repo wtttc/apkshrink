@@ -58,10 +58,12 @@ if __name__ == '__main__':
     COMPARE_DICT = os.path.join(res_floder, "build-tools", "res_pic_dict")
     WHITE_LIST_FILE = os.path.join(res_floder, "build-tools", "res_compress_white_list")
     OUT_TEMP_FLODER = os.path.join(res_floder, "bin")
+    SCRIPT_PATH = os.path.join(Utils.cur_file_dir(), "CompressChangedPic.py")
 
-    command = "python CompressChangedPic.py -r %s -t %s -d %s -o %s -w %s" % (
-        RES_FLODER, IMAGE_OPTIM_PATH, COMPARE_DICT, OUT_TEMP_FLODER, WHITE_LIST_FILE)
+    command = "python %s -r %s -t %s -d %s -o %s -w %s" % (
+        SCRIPT_PATH, RES_FLODER, IMAGE_OPTIM_PATH, COMPARE_DICT, OUT_TEMP_FLODER, WHITE_LIST_FILE)
 
+    print("SCRIPT_PATH:" + SCRIPT_PATH)
     print("RES_FLODER:" + RES_FLODER)
     print("IMAGE_OPTIM_PATH:" + IMAGE_OPTIM_PATH)
     print("COMPARE_DICT:" + COMPARE_DICT)
@@ -71,8 +73,8 @@ if __name__ == '__main__':
     success = 0
     try:
         out += os.popen(command).read()
-    except Exception, e:
-        out += e.message
+    except:
+        out += "command exec meet error"
         success = 1
 
     print(out)

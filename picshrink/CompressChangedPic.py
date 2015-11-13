@@ -10,7 +10,7 @@ import Utils
 
 __author__ = 'tiantong'
 
-RES_NAME = "res" + os.path.sep
+RES_NAME = os.path.sep + "res" + os.path.sep
 
 # BatchShrink [file path]
 class BatchShrink(object):

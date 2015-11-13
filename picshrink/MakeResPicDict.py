@@ -11,7 +11,7 @@ import Utils
 
 FILE_TYPE = ["png", "jpg", "jpeg", "bmp"]
 FILTER_LIST = [".9.", ".DS_Store"]
-RES_NAME = "res" + os.path.sep
+RES_NAME = os.path.sep + "res" + os.path.sep
 
 
 # 过滤文件
